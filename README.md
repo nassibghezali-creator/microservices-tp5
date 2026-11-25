@@ -46,7 +46,7 @@ Le client n'appelle que `zuul-gateway`, qui résout les adresses des services da
 
 Structure du projet sur le disque :
 
-![Structure du projet](docs/images/00-structure-projet.png)
+![Structure du projet](images/Structure%20du%20projet.png)
 
 Arborescence :
 
@@ -102,7 +102,7 @@ Contenu de `config-repo/` :
 
 Vérification : `http://localhost:8888/order-service/default` et `http://localhost:8888/order-service/docker`.
 
-![Réponse du Config Server](docs/images/01-config-server.png)
+![Réponse du Config Server](images/Réponse%20du%20Config%20Server.png)
 
 ## 4. order-service, client du Config Server
 
@@ -118,8 +118,6 @@ Vérification : `http://localhost:8888/order-service/default` et `http://localho
 3. **`application.properties` vidé** : toute propriété laissée ici aurait priorité sur celles du Config Server.
 
 Ordre de démarrage en local : `eureka-server` (8761), `config-server` (8888), puis `order-service` (8090).
-
-![Logs order-service : Fetching config from server](docs/images/02-fetching-config.png)
 
 ## 5. Conteneurisation
 
@@ -163,8 +161,6 @@ public class ZuulGatewayApplication {
 | `http://localhost:8765/demo/hello` | `demo`, route `/hello` |
 | `http://localhost:8765/actuator/routes` | liste des routes |
 
-![Routes Zuul](docs/images/03-zuul-routes.png)
-
 ## 7. Lancer et tester
 
 Générer les JARs (dans chaque projet) puis lancer :
@@ -188,23 +184,21 @@ docker-compose ps
 | http://localhost:8090/order | `Commande créée. Réponse du service demo : Hello, Microservice!` |
 | http://localhost:8765/order-service/order | même réponse via la gateway |
 
-![docker-compose ps](docs/images/04-docker-compose-ps.png)
+![Tableau de bord Eureka](images/Tableau%20de%20bord%20Eureka.png)
 
-![Tableau de bord Eureka](docs/images/05-eureka.png)
+![Réponse de /order](images/Réponse%20de%20order.png)
 
-![Réponse de /order](docs/images/06-order.png)
+Les trois services répondent sur leurs ports. La page « Whitelabel Error Page » (404) est normale : on a ouvert la racine `/`, où aucune route n'est définie. Les vraies routes sont `/order-service/default` (Config Server), `/hello` (demo) et `/order` (order-service).
 
-Les trois services répondent sur leurs ports. La page « Whitelabel Error Page » (404) est normale : on a ouvert la racine `/`, où aucune route n'est définie. Les vraies routes sont `/order-service/default` (Config Server), `/hello` (`demo`) et `/order` (`order-service`).
+![demo sur le port 8080](images/demo%20(8080).png)
 
-![Config Server sur le port 8888](docs/images/08-config-server-8888.png)
-
-![demo sur le port 8080](docs/images/09-demo-8080.png)
-
-![order-service sur le port 8090](docs/images/10-order-service-8090.png)
+![order-service sur le port 8090](images/order-service%20(8090).png)
 
 **Disjoncteur (TP4)** : `docker-compose stop demo`, puis au moins 5 appels à `/order` → message de repli et état `OPEN` sur `http://localhost:8090/actuator/circuitbreakers`. Après `docker-compose start demo` et environ 10 secondes : `HALF_OPEN` puis `CLOSED`.
 
-![Disjoncteur ouvert](docs/images/07-circuit-breaker.png)
+![Message de repli](images/Message%20de%20repli.png)
+
+![Disjoncteur ouvert](images/Disjoncteur%20ouvert.png)
 
 Arrêt : `docker-compose down`.
 
@@ -213,11 +207,6 @@ Arrêt : `docker-compose down`.
 ```bat
 java -jar config-server\target\config-server-0.0.1-SNAPSHOT.jar
 ```
-
-
-Environnement de travail (VS Code, explorateur de projet et terminal) :
-
-![VS Code](docs/images/11-vscode.png)
 
 ## 8. Difficultés rencontrées et solutions
 
