@@ -223,6 +223,10 @@ java -jar config-server\target\config-server-0.0.1-SNAPSHOT.jar
 | Whitelabel Error Page (404) | racine `/` sans route | tester `/hello`, `/order`, `/order-service/default` |
 | Zuul incompatible avec Spring Boot 3 | Zuul 1 retiré de Spring Cloud 2020+ | gateway séparée en Spring Boot 2.3.12 / Java 11 |
 
+
+ ![docker desktop](images/docker%20desktop.png)
+
+
 ## 9. Conclusion
 
 La configuration d'`order-service` est centralisée dans le Config Server, et toute l'architecture (Eureka, Config Server, `demo`, `order-service`, Zuul) démarre avec `docker-compose up -d --build`.
