@@ -1,0 +1,77 @@
+networks:
+  microservice-network:
+    driver: bridge
+
+services:
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - microservice-network
+    environment:
+      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
+      - EUREKA_CLIENT_FETCH_REGISTRY=false
+
+  config-server:
+    build: ./config-server
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - microservice-network
+    environment:
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS=file:/app/config-repo/
+    volumes:
+      - ./config-repo:/app/config-repo
+    depends_on:
+      - eureka-server
+
+  demo:
+    build: ./demo
+    container_name: demo
+    ports:
+      - "8080:8080"
+    networks:
+      - microservice-network
+    environment:
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    ports:
+      - "8090:8090"
+    networks:
+      - microservice-network
+    environment:
+      # Le profil "docker" charge order-service-docker.properties depuis le Config Server
+      # (les proprietes distantes ont priorite sur les variables d'environnement)
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    depends_on:
+      - config-server
+      - eureka-server
+      - demo
+    restart: on-failure
+
+  zuul-gateway:
+    build: ./zuul-gateway
+    container_name: zuul-gateway
+    ports:
+      - "8765:8765"
+    networks:
+      - microservice-network
+    environment:
+      # Profil "docker" -> zuul-gateway-docker.properties (Eureka = eureka-server)
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CLOUD_CONFIG_URI=http://config-server:8888
+    depends_on:
+      - config-server
+      - eureka-server
+      - order-service
+    restart: on-failure
