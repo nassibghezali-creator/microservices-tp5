@@ -175,6 +175,9 @@ cd zuul-gateway  && mvnw.cmd clean package -DskipTests && cd ..
 docker-compose up -d --build
 docker-compose ps
 ```
+docker desktop:
+
+ ![docker desktop](images/docker%20desktop.png)
 
 | Test | Attendu |
 | --- | --- |
@@ -224,7 +227,7 @@ java -jar config-server\target\config-server-0.0.1-SNAPSHOT.jar
 | Zuul incompatible avec Spring Boot 3 | Zuul 1 retiré de Spring Cloud 2020+ | gateway séparée en Spring Boot 2.3.12 / Java 11 |
 
 
- ![docker desktop](images/docker%20desktop.png)
+
 
 
 ## 9. Conclusion
